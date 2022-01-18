@@ -1,0 +1,60 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+.input-field{
+    display: flex;
+    width: 100%;
+}
+
+.input-field>*{
+    margin: 5px;
+}
+
+.input-field label{
+    flex-grow: 1;
+}
+
+button{
+    background: rgba(200, 200, 200, 0.1);
+    border:2px solid black;
+    padding: 4px 20px;
+    width: 90%
+}
+
+.input-container{
+    display: flex;
+    flex-direction: column;
+    border-left: 2px dashed black;
+}
+
+.input-container>*{
+    margin: 10px 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.filter-input-container>*{
+    margin: 1px;
+    width: 30px;
+    max-width: fit-content;
+}
+
+.hide{
+    display: none;
+}
+
+.show{
+    display: block;
+}
