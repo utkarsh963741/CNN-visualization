@@ -18,13 +18,6 @@
     var o_y = 0;
     var o_d = 0;
 
-    var w_k = 0;
-    var w_q = 0;
-
-    var w_x = 0;
-    var w_y = 0;
-    var w_d = 0;
-
     var W1 = 7;
     var H1 = 7;
     var D1 = 1;
@@ -41,91 +34,52 @@
     var Ws = null;
     var bs = null;
     var input = null;
+    var O = null;
 
     function filterInput() {
-      Ws = [];
-      bs = [];
-      input = document.getElementById("ip").value;
-      console.log("in", input)
-      if (w_k < K) {
-        console.log(W)
-        if (w_q < W.w.length) {
-          console.log(w_q);
-          W.w[w_q] = input;
-          w_q++;
-          printWeight(svg, W, 270, 20)
+      Ws=[];
+      bs=[];
+      for (var k = 0; k < K; k++) {
+        W = new U.Vol(F, F, D1);
+        var q = 0;
+        for (var x = 0; x < F; x++) {
+          for (y = 0; y < F; y++) {
+            if (q < W.w.length) {
+              W.w[q] = document.getElementById("FIn-" + x + "-" + y).value;
+              q++;
+            }
+          }
         }
-        else {
-          w_k++;
-          w_q = 0;
-          Ws.push(W);
-          console.log(W.w)
-          b.w[0] = input;
-          printBias(svg, 270, 280 + 20 )
-          bs.push(b);
-          O = conv_forward(X, Ws, bs, S);
-        }
+        printWeight(svg, W, 270, 40)
+        console.log(W.w);
+        Ws.push(W);
+        b = new U.Vol(1, 1, 1);
+        b.w[0] = document.getElementById("ip").value;
+        printWeight(svg, b, 270, 280 + 10)
+        bs.push(b);
       }
-
+      O = conv_forward(X, Ws, bs, S);
     }
 
     function printWeight(svg, V, xoff, yoff) {
       var pad = 3;
       var dpad = 20;
       var gyoff = 20;
+      for (var d = 0; d < V.depth; d++) {
+        for (var x = 0; x < V.sx; x++) {
+          for (var y = 0; y < V.sy; y++) {
 
-      if (w_d < V.depth) {
-        if (w_y < V.sy) {
-          if (w_x < V.sx) {
-            console.log(w_d, w_x, w_y);
-            var xcoord = xoff + w_x * (cs + pad);
-            var ycoord = yoff + w_y * (cs + pad) + w_d * (V.sy * (cs + pad) + dpad) + gyoff;
+            var xcoord = xoff + x * (cs + pad);
+            var ycoord = yoff + y * (cs + pad) + d * (V.sy * (cs + pad) + dpad) + gyoff;
             svg.append('text')
               .attr('x', xcoord + 5)
-              .attr('y', ycoord + 15+20)
+              .attr('y', ycoord + 17)
               .attr('font-size', 16)
               .attr('fill', 'black')
-              .text(input);
-            w_x++;
-          }
-          else {
-            w_y++;
-            w_x = 0;
-            console.log(w_d, w_x, w_y);
-            var xcoord = xoff + w_x * (cs + pad);
-            var ycoord = yoff + w_y * (cs + pad) + w_d * (V.sy * (cs + pad) + dpad) + gyoff;
-            svg.append('text')
-              .attr('x', xcoord + 5)
-              .attr('y', ycoord + 15 +20)
-              .attr('font-size', 16)
-              .attr('fill', 'black')
-              .text(input);
-            w_x++;
+              .text(V.get(x, y, d).toFixed(0));
           }
         }
-        else {
-          w_y = 0;
-          w_d++;
-        }
       }
-      else {
-        return;
-      }
-
-
-    }
-
-    function printBias(svg,xoff,yoff) {
-      var gyoff = 20;
-      var xcoord = xoff;
-      var ycoord = yoff + gyoff;
-
-      svg.append('text')
-        .attr('x', xcoord + 5)
-        .attr('y', ycoord + 15 - 5)
-        .attr('font-size', 16)
-        .attr('fill', 'black')
-        .text(input);
     }
 
     function init() {
@@ -251,7 +205,7 @@
               .attr('class', vid);
 
             svg.append('text')
-              .attr('x', xcoord + 5 )
+              .attr('x', xcoord + 5)
               .attr('y', ycoord + 17)
               .attr('font-size', 16)
               .attr('fill', 'black')
@@ -324,8 +278,8 @@
           var xcoord = xoff + o_x * (cs + pad);
           var ycoord = yoff + o_y * (cs + pad) + o_d * (V.sy * (cs + pad) + dpad) + gyoff;
           svg.append('text')
-            .attr('x', xcoord + 5 -100)
-            .attr('y', ycoord + 15 +20)
+            .attr('x', xcoord + 5 - 100)
+            .attr('y', ycoord + 15 + 20)
             .attr('font-size', 16)
             .attr('fill', 'black')
             .text(V.get(o_x, o_y, o_d).toFixed(0));
@@ -348,17 +302,17 @@
 
       var yoff = 20;
       // render input volume
-      renderVol(svg, X, 20, yoff+20, '#DDF', 'Input Volume (+pad 1)', 'x');
+      renderVol(svg, X, 20, yoff + 20, '#DDF', 'Input Volume (+pad 1)', 'x');
 
       for (var i = 0; i < Ws.length; i++) {
         // render weights
-        renderVolOutput(svg, Ws[i], 270 + i * 250, yoff+20, '#FDD', 'Filter W' + i, 'w' + i);
+        renderVolOutput(svg, Ws[i], 270 + i * 250, yoff + 20, '#FDD', 'Filter W' + i, 'w' + i);
         // render biases
-        renderVolOutput(svg, bs[i], 270 + i * 250, 250 + yoff+20, '#FDD', 'Bias b' + i, 'b' + i);
+        renderVolOutput(svg, bs[i], 270 + i * 250, 250 + yoff + 20, '#FDD', 'Bias b' + i, 'b' + i);
       }
 
       // render output
-      renderVolOutput(svg, O, 500, yoff+20, '#DFD', 'Output Volume', 'o');
+      renderVolOutput(svg, O, 500, yoff + 20, '#DFD', 'Output Volume', 'o');
 
 
       // render controls
@@ -379,7 +333,6 @@
         .attr('stroke-width', '2')
         .attr('style', 'cursor:pointer;')
         .on('click', function () {
-          console.log("hi");
           if (o_d < O.depth) {
             if (o_x < O.sx) {
               printOutput(svg, O, 600, yoff);
@@ -392,30 +345,30 @@
         });
 
 
-        svg.append('text')
-          .attr('x', 542)
-          .attr('y', 340)
-          .attr('font-size', 16)
-          .attr('fill', 'black')
-          .text('Toggle movement');
-        svg.append('rect')
-          .attr('x', 500)
-          .attr('y', 320)
-          .attr('height', 30)
-          .attr('width', 200)
-          .attr('fill', "rgba(200, 200, 200, 0.1)")
-          .attr('stroke', 'black')
-          .attr('stroke-width', '2')
-          .attr('style', 'cursor:pointer;')
-          .on('click', function() {
-            // toggle 
-            if(iid === -1) {
-              iid = setInterval(focusCell, 1000);
-            } else {
-              clearInterval(iid);
-              iid = -1;
-            }
-          });
+      svg.append('text')
+        .attr('x', 542)
+        .attr('y', 340)
+        .attr('font-size', 16)
+        .attr('fill', 'black')
+        .text('Toggle movement');
+      svg.append('rect')
+        .attr('x', 500)
+        .attr('y', 320)
+        .attr('height', 30)
+        .attr('width', 200)
+        .attr('fill', "rgba(200, 200, 200, 0.1)")
+        .attr('stroke', 'black')
+        .attr('stroke-width', '2')
+        .attr('style', 'cursor:pointer;')
+        .on('click', function () {
+          // toggle 
+          if (iid === -1) {
+            iid = setInterval(focusCell, 1000);
+          } else {
+            clearInterval(iid);
+            iid = -1;
+          }
+        });
     }
 
     var fxg = 0;
@@ -535,11 +488,7 @@
       o_x = 0;
       o_y = 0;
       o_d = 0;
-      w_x = 0;
-      w_y = 0;
-      w_d = 0;
-      w_k = 0;
-      w_q = 0;
+
       F = document.getElementById("F").value;
       S = document.getElementById("S").value;
 
@@ -554,12 +503,10 @@
       }
 
 
-      for(let i = 0;i<F;i++)
-      {
-        for(let j = 0;j<F;j++)
-        {
-          let inputElem = document.createElement('input'); 
-          inputElem.setAttribute("id", "FIn-"+i+"-"+j);
+      for (let i = 0; i < F; i++) {
+        for (let j = 0; j < F; j++) {
+          let inputElem = document.createElement('input');
+          inputElem.setAttribute("id", "FIn-" + i + "-" + j);
           inputElem.setAttribute("type", "number");
           inputElem.setAttribute("min", "-1");
           inputElem.setAttribute("max", "1");
@@ -602,7 +549,7 @@
         <br>
         <button type="button" onclick="redraw()">Generate Filter</button>
       </div>
-    
+
       <div class="hide" id="FBInput">
         <div>
           <div style="text-align: center;">
@@ -631,11 +578,11 @@
     var FLabel = document.getElementById("F-value")
     var SLabel = document.getElementById("S-value")
 
-    Fslider.oninput = function() {
+    Fslider.oninput = function () {
       FLabel.innerHTML = this.value;
     }
 
-    Sslider.oninput = function() {
+    Sslider.oninput = function () {
       SLabel.innerHTML = this.value
     }
   </script>
