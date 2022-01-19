@@ -51,7 +51,6 @@
           }
         }
         printWeight(svg, W, 270, 40)
-        console.log(W.w);
         Ws.push(W);
         b = new U.Vol(1, 1, 1);
         b.w[0] = document.getElementById("ip").value;
@@ -108,7 +107,6 @@
           W.w[q] = 0;
         }
         Ws.push(W);
-        console.log(W)
         b = new U.Vol(1, 1, 1);
         b.w[0] = 1 - k;
         bs.push(b);
@@ -283,7 +281,6 @@
             .attr('font-size', 16)
             .attr('fill', 'black')
             .text(V.get(o_x, o_y, o_d).toFixed(0));
-          console.log(V.get(o_x, o_y, o_d));
           o_y++;
         }
         else {
@@ -517,7 +514,6 @@
         let brElem = document.createElement("br");
         FilterContainer.appendChild(brElem)
       }
-      console.log(F, S);
       start();
     }
 
