@@ -56,5 +56,5 @@ button{
 }
 
 .show{
-    display: block;
+    display: flex;
 }

@@ -517,6 +517,16 @@
       start();
     }
 
+    function randomGenerate()
+    {
+      for (let i = 0; i < F; i++) {
+        for (let j = 0; j < F; j++) {
+          let inputElem = document.getElementById("FIn-" + i + "-" + j);
+          inputElem.value = Math.floor((Math.random() * 3)-1)
+        }
+      }
+    }
+
   </script>
 
 
@@ -547,6 +557,7 @@
       </div>
 
       <div class="hide" id="FBInput">
+        <button type="button" onclick="randomGenerate()">Generate Random Values </button>
         <div>
           <div style="text-align: center;">
             <label for="ip">Filter Input</label><br>
@@ -556,7 +567,7 @@
           <br>
           <div style="text-align: center">
             <label for="ip">Bias Input</label><br>
-            <input type="number" id="ip" style="width: 70px;" value="1">
+            <input type="number" id="ip" style="width: 70px;" value="0">
           </div>
         </div>
         <br>
