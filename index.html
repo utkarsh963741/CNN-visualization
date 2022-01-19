@@ -37,6 +37,8 @@
     var O = null;
 
     function filterInput() {
+      document.getElementById("EnterBtn").disabled = true
+      
       Ws=[];
       bs=[];
       for (var k = 0; k < K; k++) {
@@ -58,6 +60,7 @@
         bs.push(b);
       }
       O = conv_forward(X, Ws, bs, S);
+      
     }
 
     function printWeight(svg, V, xoff, yoff) {
@@ -481,6 +484,8 @@
     }
 
     function redraw() {
+      document.getElementById("EnterBtn").disabled = false
+
       d3.select("svg").remove();
       o_x = 0;
       o_y = 0;
@@ -490,8 +495,8 @@
       S = document.getElementById("S").value;
 
       FBInput = document.getElementById("FBInput")
-
       FBInput.className = "show"
+
 
       FilterContainer = document.getElementById("filter-input-container")
 
@@ -571,7 +576,9 @@
           </div>
         </div>
         <br>
-        <button type="button" onclick="filterInput()">Enter</button>
+        <button type="button" id="EnterBtn" onclick="filterInput()">Enter</button>
+        <br>
+        <button type="button" onclick="redraw()">Reload</button>
       </div>
     </div>
     <br><br>
