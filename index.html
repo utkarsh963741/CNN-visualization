@@ -38,9 +38,8 @@
 
     function filterInput() {
       document.getElementById("EnterBtn").disabled = true
-      
-      Ws=[];
-      bs=[];
+      Ws = [];
+      bs = [];
       for (var k = 0; k < K; k++) {
         W = new U.Vol(F, F, D1);
         var q = 0;
@@ -60,7 +59,7 @@
         bs.push(b);
       }
       O = conv_forward(X, Ws, bs, S);
-      
+
     }
 
     function printWeight(svg, V, xoff, yoff) {
@@ -270,8 +269,8 @@
     }
 
     function printOutput(svg, V, xoff, yoff) {
-      if (o_x < V.sx)
-        if (o_y < V.sy) {
+      if (o_y < V.sy)
+        if (o_x < V.sx) {
           focusCell();
           var pad = 3;
           var dpad = 20;
@@ -284,11 +283,11 @@
             .attr('font-size', 16)
             .attr('fill', 'black')
             .text(V.get(o_x, o_y, o_d).toFixed(0));
-          o_y++;
+          o_x++;
         }
         else {
-          o_y = 0;
-          o_x++;
+          o_x = 0;
+          o_y++;
           printOutput(svg, O, 600, yoff);
         }
     }
@@ -334,14 +333,15 @@
         .attr('style', 'cursor:pointer;')
         .on('click', function () {
           if (o_d < O.depth) {
-            if (o_x < O.sx) {
+            if (o_y < O.sy) {
               printOutput(svg, O, 600, yoff);
             }
             else {
-              o_x = 0;
+              o_y = 0;
               o_d++;
             }
           }
+
         });
 
 
@@ -461,12 +461,12 @@
       }
 
       // output focus cycle
-      fyg++;
-      if (fyg >= O.sx) {
-        fyg = 0;
-        fxg++;
-        if (fxg >= O.sy) {
-          fxg = 0;
+      fxg++;
+      if (fxg >= O.sx) {
+        fxg = 0;
+        fyg++;
+        if (fyg >= O.sy) {
+          fyg = 0;
           fdg++;
           if (fdg >= O.depth) {
             fdg = 0;
@@ -490,6 +490,9 @@
       o_x = 0;
       o_y = 0;
       o_d = 0;
+      fxg = 0;
+      fyg = 0;
+      fdg = 0;
 
       F = document.getElementById("F").value;
       S = document.getElementById("S").value;
@@ -522,12 +525,11 @@
       start();
     }
 
-    function randomGenerate()
-    {
+    function randomGenerate() {
       for (let i = 0; i < F; i++) {
         for (let j = 0; j < F; j++) {
           let inputElem = document.getElementById("FIn-" + i + "-" + j);
-          inputElem.value = Math.floor((Math.random() * 3)-1)
+          inputElem.value = Math.floor((Math.random() * 3) - 1)
         }
       }
     }
